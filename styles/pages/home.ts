@@ -1,9 +1,12 @@
 import { styled } from '..'
 
-export const HomeContainer = styled('main', {
+export const Container = styled('main', {
+	position: 'relative',
+})
+
+export const SliderContainer = styled('div', {
 	display: 'flex',
 	width: '100%',
-	maxWidth: 'calc(100vw - ((100vw - 1180px) / 2))',
 	marginLeft: 'auto',
 	minHeight: 656,
 })
@@ -14,6 +17,7 @@ export const Product = styled('div', {
     cursor: 'pointer',
     position: 'relative',
     overflow: 'hidden',
+	minWidth: '43.5rem',
 
     display: 'flex',
     alignItems: 'center',
@@ -60,4 +64,42 @@ export const Product = styled('div', {
             opacity: 1
         }
     }
+})
+
+export const NavigationOverlay = styled('div', {
+	position: 'absolute',
+	width: '8.5rem',
+	padding: '1rem',
+	border: 'none',
+	top: 0,
+	bottom: 0,
+
+	display: 'flex',
+	alignItems: 'center',
+
+	variants: {
+		orientation: {
+			left: {
+				left: 0,
+				background: 'linear-gradient(270deg, rgba(18, 18, 20, 0) 0%, rgba(18, 18, 20, 0.75) 100%)'
+			},
+			right: {
+				right: 0,
+				background: 'linear-gradient(90deg, rgba(18, 18, 20, 0) 0%, rgba(18, 18, 20, 0.75) 100%)',
+				justifyContent: 'flex-end'
+			}
+		}
+	}
+})
+
+export const NavigationButton = styled('button', {
+	cursor: 'pointer',
+	border: 'none',
+	backgroundColor: 'transparent',
+	fontSize: '3rem',
+	color: '$gray300',
+
+	'&:hover': {
+		color: '$gray100',
+	}
 })

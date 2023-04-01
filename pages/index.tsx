@@ -1,12 +1,19 @@
 import { stripe } from '@/lib/stripe'
-import { HomeContainer, Product } from '@/styles/pages/home'
+import {
+	SliderContainer,
+	Product,
+	Container,
+	NavigationOverlay,
+	NavigationButton,
+} from '@/styles/pages/home'
 import Image from "next/image";
 import { useKeenSlider } from 'keen-slider/react'
 import Stripe from "stripe";
-
 import 'keen-slider/keen-slider.min.css'
 import Link from "next/link";
 import Head from 'next/head';
+import { CaretLeft, CaretRight } from '@phosphor-icons/react';
+import { MouseEvent, useState } from 'react'
 
 interface HomeProps {
 	products: {
@@ -17,13 +24,39 @@ interface HomeProps {
 	}[]
 }
 
+const CONTAINER_MAX_WIDTH = 1180
+const SLIDE_SIZE = 0.55
+
 export default function Home({ products }: HomeProps) {
-	const [sliderRef] = useKeenSlider({
-		slides: {
-			perView: 3,
-			spacing: 48
+	const [currentSlide, setCurrentSlide] = useState(0)
+	const [loaded, setLoaded] = useState(false)
+	const [sliderRef, instanceRef] = useKeenSlider({
+		initial: 0,
+		slideChanged(slider) {
+			setCurrentSlide(slider.track.details.rel)
+		},
+		slides: (containerWidth) => {
+			let origin = 0
+			if (containerWidth - CONTAINER_MAX_WIDTH > 0) {
+				origin = ((containerWidth - CONTAINER_MAX_WIDTH) / 2) / containerWidth
+			}
+
+			return products.map((_, index) => ({ size: SLIDE_SIZE, spacing: 0.04, origin: index === 0 ? origin : (1 - SLIDE_SIZE) / 2 }))
+		},
+		created() {
+			setLoaded(true)
 		}
 	});
+
+	function handleGoNextSlide(event: MouseEvent<HTMLButtonElement>) {
+		event.stopPropagation()
+		instanceRef.current?.next()
+	}
+
+	function handleGoPreviousSlide(event: MouseEvent<HTMLButtonElement>) {
+		event.stopPropagation()
+		instanceRef.current?.prev()
+	}
 
 	return (
 		<>
@@ -31,22 +64,44 @@ export default function Home({ products }: HomeProps) {
 				<title>Home | Ignite Shop</title>
 			</Head>
 
-			<HomeContainer ref={sliderRef} className="keen-slider">
-				{products.map(product => {
-					return (
-						<Link href={`/product/${product.id}`} key={product.id}>
-							<Product className="keen-slider__slide">
-								<Image src={product.imageUrl} width={520} height={480} alt="" />
+			<Container>
+				<SliderContainer ref={sliderRef} className="keen-slider">
+					{products.map(product => {
+						return (
+							<Link href={`/product/${product.id}`} key={product.id}>
+								<Product className="keen-slider__slide">
+									<Image src={product.imageUrl} width={520} height={480} alt="" />
 
-								<footer>
-									<strong>{product.name}</strong>
-									<span>{product.price}</span>
-								</footer>
-							</Product>
-						</Link>
-					)
-				})}
-			</HomeContainer>
+									<footer>
+										<strong>{product.name}</strong>
+										<span>{product.price}</span>
+									</footer>
+								</Product>
+							</Link>
+						)
+					})}
+				</SliderContainer>
+
+				{loaded && instanceRef.current && (
+					<>
+						{currentSlide > 0 && (
+							<NavigationOverlay orientation='left'>
+								<NavigationButton onClick={handleGoPreviousSlide}>
+									<CaretLeft />
+								</NavigationButton>
+							</NavigationOverlay>
+						)}
+
+						{currentSlide < instanceRef.current.track.details.slides.length - 1 && (
+							<NavigationOverlay orientation='right'>
+								<NavigationButton onClick={handleGoNextSlide}>
+									<CaretRight />
+								</NavigationButton>
+							</NavigationOverlay>
+						)}
+					</>
+				)}
+			</Container>
 		</>
 	)
 }
