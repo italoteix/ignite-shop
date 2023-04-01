@@ -32,6 +32,7 @@ const SLIDE_SIZE = 0.55
 export default function Home({ products }: HomeProps) {
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [loaded, setLoaded] = useState(false)
+	const [loadedImages, setLoadedImages] = useState<boolean[]>([])
 	const [sliderRef, instanceRef] = useKeenSlider({
 		initial: 0,
 		slideChanged(slider) {
@@ -60,6 +61,16 @@ export default function Home({ products }: HomeProps) {
 		instanceRef.current?.prev()
 	}
 
+	function handleLoadingComplete(index: number) {
+		return function() {
+			setLoadedImages(prevState => {
+				const newState = [...prevState]
+				newState[index] = true
+				return newState
+			})
+		}
+	}
+
 	return (
 		<>
 			<Head>
@@ -68,11 +79,17 @@ export default function Home({ products }: HomeProps) {
 
 			<Container>
 				<SliderContainer ref={sliderRef} className="keen-slider">
-					{products.map(product => {
-						return (
+					{products.map((product, index) => (
 							<Link href={`/product/${product.id}`} key={product.id}>
-								<Product className="keen-slider__slide">
-									<Image src={product.imageUrl} width={520} height={480} alt="" />
+								<Product className="keen-slider__slide" loading={!loadedImages[index]}>
+									<Image
+										src={product.imageUrl}
+										width={520}
+										height={480}
+										alt=""
+										placeholder='empty'
+										onLoadingComplete={handleLoadingComplete(index)}
+									/>
 
 									<ProductFooter>
 										<div>
@@ -87,7 +104,7 @@ export default function Home({ products }: HomeProps) {
 								</Product>
 							</Link>
 						)
-					})}
+					)}
 				</SliderContainer>
 
 				{loaded && instanceRef.current && (

@@ -1,4 +1,13 @@
-import { styled } from '..'
+import { styled, keyframes } from '..'
+
+const pulse = keyframes({
+	'0%, 100%': {
+		opacity: 1,
+	},
+	'50%': {
+		opacity: 0.5,
+	},
+})
 
 export const Container = styled('main', {
 	position: 'relative',
@@ -63,7 +72,16 @@ export const Product = styled('div', {
             transform: 'translateY(0%)',
             opacity: 1
         }
-    }
+    },
+
+	variants: {
+		loading: {
+			true: {
+				background: '$gray800',
+				animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+			}
+		}
+	}
 })
 
 export const ProductFooter = styled('footer', {
