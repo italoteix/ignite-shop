@@ -5,6 +5,8 @@ import {
 	Container,
 	NavigationOverlay,
 	NavigationButton,
+	ProductFooter,
+	CartButton,
 } from '@/styles/pages/home'
 import Image from "next/image";
 import { useKeenSlider } from 'keen-slider/react'
@@ -12,7 +14,7 @@ import Stripe from "stripe";
 import 'keen-slider/keen-slider.min.css'
 import Link from "next/link";
 import Head from 'next/head';
-import { CaretLeft, CaretRight } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, Handbag } from '@phosphor-icons/react';
 import { MouseEvent, useState } from 'react'
 
 interface HomeProps {
@@ -72,10 +74,16 @@ export default function Home({ products }: HomeProps) {
 								<Product className="keen-slider__slide">
 									<Image src={product.imageUrl} width={520} height={480} alt="" />
 
-									<footer>
-										<strong>{product.name}</strong>
-										<span>{product.price}</span>
-									</footer>
+									<ProductFooter>
+										<div>
+											<strong>{product.name}</strong>
+											<span>{product.price}</span>
+										</div>
+
+										<CartButton>
+											<Handbag size={24} />
+										</CartButton>
+									</ProductFooter>
 								</Product>
 							</Link>
 						)

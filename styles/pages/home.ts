@@ -66,6 +66,30 @@ export const Product = styled('div', {
     }
 })
 
+export const ProductFooter = styled('footer', {
+	display: 'flex',
+	justifyContent: 'space-between',
+
+	'& div': {
+		display: 'flex',
+		flexDirection: 'column'
+	}
+})
+
+export const CartButton = styled('button', {
+	width: '3rem',
+	height: '3rem',
+	borderRadius: 6,
+	border: 'none',
+	backgroundColor: '$green500',
+	cursor: 'pointer',
+	color: '$white',
+
+	'&:hover': {
+		backgroundColor: '$green300'
+	}
+})
+
 export const NavigationOverlay = styled('div', {
 	position: 'absolute',
 	width: '8.5rem',
