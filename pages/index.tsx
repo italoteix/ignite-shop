@@ -16,20 +16,26 @@ import Link from "next/link";
 import Head from 'next/head';
 import { CaretLeft, CaretRight, Handbag } from '@phosphor-icons/react';
 import { MouseEvent, useState } from 'react'
+import { useShoppingCart } from 'use-shopping-cart';
+
+interface Product {
+	id: string
+	name: string
+	imageUrl: string
+	price: number
+	formatedPrice: string
+	currency: string
+}
 
 interface HomeProps {
-	products: {
-		id: string
-		name: string
-		imageUrl: string
-		price: string
-	}[]
+	products: Product[]
 }
 
 const CONTAINER_MAX_WIDTH = 1180
 const SLIDE_SIZE = 0.55
 
 export default function Home({ products }: HomeProps) {
+	const { addItem } = useShoppingCart()
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [loaded, setLoaded] = useState(false)
 	const [loadedImages, setLoadedImages] = useState<boolean[]>([])
@@ -71,6 +77,14 @@ export default function Home({ products }: HomeProps) {
 		}
 	}
 
+	function handleAddToCart(product: Product) {
+		return function(event: MouseEvent<HTMLButtonElement>) {
+			event.preventDefault()
+			event.stopPropagation()
+			addItem(product)
+		}
+	}
+
 	return (
 		<>
 			<Head>
@@ -97,7 +111,7 @@ export default function Home({ products }: HomeProps) {
 											<span>{product.price}</span>
 										</div>
 
-										<CartButton>
+										<CartButton onClick={handleAddToCart(product)}>
 											<Handbag size={24} />
 										</CartButton>
 									</ProductFooter>
@@ -143,7 +157,9 @@ export async function getStaticProps() {
 			id: product.id,
 			name: product.name,
 			imageUrl: product.images[0],
-			price: new Intl.NumberFormat('pt-BR',{
+			currency: price.currency,
+			price: price.unit_amount,
+			formatedPrice: new Intl.NumberFormat('pt-BR',{
 				style: 'currency',
 				currency: 'BRL'
 			}).format((price.unit_amount ?? 0) / 100),

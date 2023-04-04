@@ -5,19 +5,9 @@ import Link from 'next/link'
 import { Handbag } from '@phosphor-icons/react'
 import { useShoppingCart } from 'use-shopping-cart'
 import { Cart } from './Cart'
-import { useState } from 'react'
 
 export function Header() {
-	const { cartCount } = useShoppingCart()
-	const [isCartOpen, setIsCartOpen] = useState(false)
-
-	function handleOpenCart() {
-		setIsCartOpen(true)
-	}
-
-	function handleCloseCart() {
-		setIsCartOpen(false)
-	}
+	const { cartCount, handleCartClick, handleCloseCart, shouldDisplayCart } = useShoppingCart()
 
 	return (
 		<Container>
@@ -25,12 +15,12 @@ export function Header() {
 				<Image src={logoImg} alt="dois triangulos sobrepostos a esquerda do nome Ignite Shop" />
 			</Link>
 
-			<CartButton onClick={handleOpenCart}>
+			<CartButton onClick={handleCartClick}>
 				<Handbag size={24} />
 				{!!cartCount && <Counter>{cartCount}</Counter>}
 			</CartButton>
 
-			{isCartOpen && <Cart onClose={handleCloseCart} />}
+			{shouldDisplayCart && <Cart onClose={handleCloseCart} />}
 		</Container>
 	)
 }
