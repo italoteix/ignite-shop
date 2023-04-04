@@ -18,5 +18,24 @@ export const CartButton = styled('button', {
 	border: 'none',
 	backgroundColor: '$gray800',
 	cursor: 'pointer',
-	color: '$gray500'
+	color: '$gray500',
+	position: 'relative'
+})
+
+export const Counter = styled('span', {
+	position: 'absolute',
+	backgroundColor: '$green500',
+	color: '$white',
+	width: '1.5rem',
+	height: '1.5rem',
+	borderRadius: '50%',
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+	top: '-13%',
+	right: '-13%',
+	border: '3px solid',
+	borderColor: '$gray900',
+	fontSize: '$xs',
+	fontWeight: 'bold'
 })
