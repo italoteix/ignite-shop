@@ -4,42 +4,38 @@ import {
 	ProductContainer,
 	ProductDetails,
 } from '@/styles/pages/product'
-import axios from "axios";
 import { GetStaticPropsContext } from "next";
 import Head from 'next/head';
 import Image from "next/image";
-import { useState } from "react";
 import Stripe from "stripe";
+import { useShoppingCart } from 'use-shopping-cart';
 
 interface ProductProps {
 	product: {
 		id: string
 		name: string
 		imageUrl: string
-		price: string
 		description: string
+		price: number
+		formatedPrice: string
+		currency: string
 		defaultPriceId: string
 	}
 }
 
 export default function Product({ product }: ProductProps) {
-	const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
+	const { addItem, cartDetails } = useShoppingCart()
 
-	async function handleBuyClick() {
-		try {
-			setIsCreatingCheckoutSession(true)
-
-			const response = await axios.post('/api/checkout', {
-				priceId: product.defaultPriceId
+	function handleAddToCart(addedProduct: ProductProps['product']) {
+		if (cartDetails && !cartDetails[product.defaultPriceId]) {
+			addItem({
+				price_id: addedProduct.defaultPriceId,
+				name: addedProduct.name,
+				price: addedProduct.price,
+				currency: addedProduct.currency,
+				image: addedProduct.imageUrl,
+				formattedPrice: addedProduct.formatedPrice
 			})
-
-			const { checkoutUrl } = response.data
-
-			window.location.href = checkoutUrl
-		} catch {
-			setIsCreatingCheckoutSession(false)
-
-			alert('Falha ao direcionar ao checkout.')
 		}
 	}
 
@@ -56,11 +52,11 @@ export default function Product({ product }: ProductProps) {
 
 				<ProductDetails>
 					<h1>{product.name}</h1>
-					<span>{product.price}</span>
+					<span>{product.formatedPrice}</span>
 
 					<p>{product.description}</p>
 
-					<button disabled={isCreatingCheckoutSession} onClick={handleBuyClick}>
+					<button onClick={() => handleAddToCart(product)}>
 						Colocar na sacola
 					</button>
 				</ProductDetails>
@@ -90,7 +86,9 @@ export async function getStaticProps({ params }: GetStaticPropsContext<{ id: str
 				id: product.id,
 				name: product.name,
 				imageUrl: product.images[0],
-				price: new Intl.NumberFormat('pt-BR',{
+				currency: price.currency,
+				price: price.unit_amount,
+				formatedPrice: new Intl.NumberFormat('pt-BR', {
 					style: 'currency',
 					currency: 'BRL'
 				}).format((price.unit_amount ?? 0) / 100),

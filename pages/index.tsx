@@ -25,6 +25,7 @@ interface Product {
 	price: number
 	formatedPrice: string
 	currency: string
+	defaultPriceId: string
 }
 
 interface HomeProps {
@@ -81,8 +82,15 @@ export default function Home({ products }: HomeProps) {
 		return function(event: MouseEvent<HTMLButtonElement>) {
 			event.preventDefault()
 			event.stopPropagation()
-			if (cartDetails && !cartDetails[product.id]) {
-				addItem(product)
+			if (cartDetails && !cartDetails[product.defaultPriceId]) {
+				addItem({
+					price_id: product.defaultPriceId,
+					name: product.name,
+					price: product.price,
+					currency: product.currency,
+					image: product.imageUrl,
+					formattedPrice: product.formatedPrice
+				})
 			}
 		}
 	}
@@ -110,7 +118,7 @@ export default function Home({ products }: HomeProps) {
 									<ProductFooter>
 										<div>
 											<strong>{product.name}</strong>
-											<span>{product.price}</span>
+											<span>{product.formatedPrice}</span>
 										</div>
 
 										<CartButton onClick={handleAddToCart(product)}>
@@ -165,6 +173,7 @@ export async function getStaticProps() {
 				style: 'currency',
 				currency: 'BRL'
 			}).format((price.unit_amount ?? 0) / 100),
+			defaultPriceId: price.id
 		}
 	})
 

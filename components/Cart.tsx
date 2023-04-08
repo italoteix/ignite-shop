@@ -52,15 +52,15 @@ export function Cart({ onClose }: CartProps) {
 					<ul>
 						{cartDetails && Object.values(cartDetails).map(product => {
 							return (
-								<Product key={product.id}>
+								<Product key={product.price_id}>
 									<ImageContainer>
-										<Image src={product.imageUrl} alt="" width={94} height={94} />
+										<Image src={product.image as string} alt="" width={94} height={94} />
 									</ImageContainer>
 
 									<div>
 										<p>{product.name}</p>
-										<p><strong>{product.formatedPrice}</strong></p>
-										<button onClick={() => removeItem(product.id)}>Remover</button>
+										<p><strong>{product.formattedPrice}</strong></p>
+										<button onClick={() => removeItem(product.price_id)}>Remover</button>
 									</div>
 								</Product>
 							)
