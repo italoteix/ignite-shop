@@ -85,3 +85,9 @@ export const Product = styled('li', {
 		}
 	}
 })
+
+export const ImageContainer = styled('div', {
+	background: 'linear-gradient(180deg, #1EA483 0%, #7465D4 100%)',
+	borderRadius: 8,
+	marginRight: '1.25rem'
+})
