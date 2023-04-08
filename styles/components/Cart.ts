@@ -19,6 +19,8 @@ export const Drawer = styled('div', {
 	height: '100%',
 	width: '30rem',
 	padding: '1.5rem',
+	display: 'flex',
+	flexDirection: 'column',
 
 	backgroundColor: '$gray800',
 	boxShadow: '-4px 0px 30px rgba(0, 0, 0, 0.8)',
@@ -42,7 +44,11 @@ export const CloseButton = styled('button', {
 
 export const ProductList = styled('div', {
 	padding: '1.5rem',
-	paddingTop: 0,
+	paddingBlock: 0,
+	flex: 1,
+	display: 'flex',
+	flexDirection: 'column',
+	// height: '100%',
 
 	h3: {
 		fontSize: '$lg',
@@ -53,12 +59,17 @@ export const ProductList = styled('div', {
 	ul: {
 		margin: 0,
 		padding: 0,
-		listStyle: 'none'
+		listStyle: 'none',
+		flex: 1
 	}
 })
 
 export const Product = styled('li', {
 	display: 'flex',
+
+	'&+&': {
+		marginTop: '1.5rem'
+	},
 
 	div: {
 		display: 'flex',
@@ -90,4 +101,53 @@ export const ImageContainer = styled('div', {
 	background: 'linear-gradient(180deg, #1EA483 0%, #7465D4 100%)',
 	borderRadius: 8,
 	marginRight: '1.25rem'
+})
+
+export const QuantityLabel = styled('p', {
+	display: 'flex',
+	justifyContent: 'space-between',
+	color: '$gray100',
+	marginBottom: '0.5rem',
+
+	span: {
+		display: 'inline-block',
+		marginLeft: '1rem',
+		fontSize: '$md',
+		color: '$gray300'
+	}
+})
+
+export const TotalLabel = styled('p', {
+	display: 'flex',
+	justifyContent: 'space-between',
+	color: '$gray100',
+	fontSize: '$md',
+	fontWeight: 700,
+
+	span: {
+		display: 'inline-block',
+		marginLeft: '1rem',
+		fontSize: '$xl',
+	}
+})
+
+export const CheckoutButton = styled('button', {
+	marginTop: '3.5rem',
+	backgroundColor: '$green500',
+	border: 0,
+	color: '$white',
+	borderRadius: 8,
+	padding: '1.25rem',
+	cursor: 'pointer',
+	fontWeight: 'bold',
+	fontSize: '$md',
+
+	'&:disabled': {
+		opacity: 0.6,
+		cursor: 'not-allowed',
+	},
+
+	'&:not(:disabled):hover': {
+		backgroundColor: '$green300',
+	}
 })

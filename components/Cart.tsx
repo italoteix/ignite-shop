@@ -1,21 +1,41 @@
 import {
+	CheckoutButton,
 	CloseButton,
 	Drawer,
 	ImageContainer,
 	Overlay,
 	Product,
 	ProductList,
+	QuantityLabel,
+	TotalLabel,
 } from '@/styles/components/Cart'
 import { X } from '@phosphor-icons/react'
 import { useShoppingCart } from 'use-shopping-cart'
 import Image from 'next/image'
+import { MouseEvent } from 'react'
 
 interface CartProps {
 	onClose: () => void
 }
 
 export function Cart({ onClose }: CartProps) {
-	const { cartDetails, removeItem } = useShoppingCart()
+	const { cartDetails, removeItem, cartCount = 0, redirectToCheckout, formattedTotalPrice } = useShoppingCart()
+
+	async function handleCheckout(event: MouseEvent<HTMLButtonElement>) {
+		event.preventDefault()
+
+
+		if (cartCount > 0) {
+			try {
+			  const result = await redirectToCheckout()
+			  if (result?.error) {
+				console.error(result)
+			  }
+			} catch (error) {
+			  console.error(error)
+			}
+		  }
+	}
 
 	return (
 		<>
@@ -46,6 +66,13 @@ export function Cart({ onClose }: CartProps) {
 							)
 						})}
 					</ul>
+
+					<div>
+						<QuantityLabel>Quantidade<span>{cartCount} {cartCount === 1 ? 'item' : 'itens'}</span></QuantityLabel>
+						<TotalLabel>Valor Total<span>{formattedTotalPrice}</span></TotalLabel>
+					</div>
+
+					<CheckoutButton onClick={handleCheckout}>Finalizar compra</CheckoutButton>
 				</ProductList>
 			</Drawer>
 		</>

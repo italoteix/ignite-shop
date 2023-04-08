@@ -35,7 +35,7 @@ const CONTAINER_MAX_WIDTH = 1180
 const SLIDE_SIZE = 0.55
 
 export default function Home({ products }: HomeProps) {
-	const { addItem } = useShoppingCart()
+	const { addItem, cartDetails } = useShoppingCart()
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [loaded, setLoaded] = useState(false)
 	const [loadedImages, setLoadedImages] = useState<boolean[]>([])
@@ -81,7 +81,9 @@ export default function Home({ products }: HomeProps) {
 		return function(event: MouseEvent<HTMLButtonElement>) {
 			event.preventDefault()
 			event.stopPropagation()
-			addItem(product)
+			if (cartDetails && !cartDetails[product.id]) {
+				addItem(product)
+			}
 		}
 	}
 

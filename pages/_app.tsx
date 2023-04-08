@@ -6,8 +6,8 @@ import { CartProvider } from 'use-shopping-cart'
 
 globalStyles()
 
-const successUrl = `${process.env.NEXT_URL}/success?session_id={CHECKOUT_SESSION_ID}`
-const cancelUrl = `${process.env.NEXT_URL}/`
+const successUrl = `${process.env.NEXT_PUBLIC_NEXT_URL}/success?session_id={CHECKOUT_SESSION_ID}`
+const cancelUrl = `${process.env.NEXT_PUBLIC_NEXT_URL}/`
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (
